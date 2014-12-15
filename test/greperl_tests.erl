@@ -72,7 +72,7 @@ list_of_differently_sized_tuples_test() ->
      "a.x=3\n") = to_g([{a, [x, {x, 1}, {x, y, 2}, {x, 3}]}]),
     ok.
 
-lists_with_lists_test() -> 
+lists_with_lists_test() ->
     ("a..x=1\n"
      "a..x=2\n") = to_g([{a, [[{x, 1}], [{x, 2}]]}]),
     ok.

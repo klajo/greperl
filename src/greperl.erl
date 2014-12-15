@@ -40,7 +40,7 @@
 %%% ```
 %%% $ ./bin/greperl -h
 %%% Usage: greperl [-h] [-s <separator>] [--no-quote-strings] <file>
-%%% 
+%%%
 %%%   -h, --help          show help
 %%%   -s, --separator     set key-value separator
 %%%   --no-quote-strings  do not quote strings
@@ -75,13 +75,17 @@ main(Args) ->
     end.
 
 get_opt_spec() ->
-    [{help,         $h,        "help",             undefined, "show help"},
-     {separator,    $s,        "separator",        string,    "set key-value separator"},
-     {no_quote_str, undefined, "no-quote-strings", undefined, "do not quote strings"}].
+    [{help,         $h,        "help",             undefined,
+      "show help"},
+     {separator,    $s,        "separator",        string,
+      "set key-value separator"},
+     {no_quote_str, undefined, "no-quote-strings", undefined,
+      "do not quote strings"}].
 
 usage(OptSpecList) ->
-    getopt:usage(OptSpecList, "greperl", "<file>",
-                 [{"<file>", "name of file which can be read using file:consult/1"}]).
+    getopt:usage(
+      OptSpecList, "greperl", "<file>",
+      [{"<file>", "name of file which can be read using file:consult/1"}]).
 
 fail(Format, Args) ->
     io:format("greperl: "++Format++"~n", Args),
@@ -95,7 +99,8 @@ main_to_grepable(Filename, Opts) ->
             fail("~p", [Reason])
     end.
 
-%% @doc Convert the terms inside the file into an io list with something that can be grep:ed.
+%% @doc Convert the terms inside the file into an io list with
+%% something that can be grep:ed.
 %% @see terms_to_grepable/2
 -spec file_to_grepable(Filename, Opts) -> {ok, iolist()} | {error, term()}  when
       Filename :: file:filename_all(),
@@ -112,8 +117,8 @@ file_to_grepable(Filename, Opts) when is_list(Filename), is_list(Opts) ->
 %% @doc Convert the terms into an io list with something that can be grep:ed.
 %%
 %% <ul>
-%%   <li>separator - set the string which separates the key from the value in the output
-%%       (default: "=")</li>
+%%   <li>separator - set the string which separates the key from the value
+%%       in the output (default: "=")</li>
 %%   <li>no_quote_str - don't put quotes around values which are strings</li>
 %% </ul>
 -spec terms_to_grepable(Terms, Opts) -> iolist() when
@@ -123,20 +128,6 @@ file_to_grepable(Filename, Opts) when is_list(Filename), is_list(Opts) ->
 terms_to_grepable(Terms, Opts)  when is_list(Terms) ->
     to_grepable(Terms, _KPath=[], Opts).
 
-%% to_grepable([Term|Terms]=All, KPath, Opts) ->
-%%     %% 
-%%     case io_lib:printable_list(All) of
-%%         true ->
-%%             pp_kv_str(KPath, All, Opts);
-%%         false ->
-%%             [case Term of
-%%                 {K, V} -> to_grepable(V, [K|KPath], Opts);
-%%                 _      -> pp_kv_str(KPath, Term, Opts)
-%%              end | case Terms of
-%%                        [] -> [];
-%%                        _  -> to_grepable(Terms, KPath, Opts)
-%%                    end]
-%%     end;
 to_grepable(Term, KPath, Opts) ->
     case is_leaf(Term) of
         true ->
