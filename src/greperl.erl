@@ -130,8 +130,8 @@ terms_to_grepable(Terms, Opts)  when is_list(Terms) ->
 %%             pp_kv_str(KPath, All, Opts);
 %%         false ->
 %%             [case Term of
-%%                 {K, V} when is_atom(K) -> to_grepable(V, [K|KPath], Opts);
-%%                 _                      -> pp_kv_str(KPath, Term, Opts)
+%%                 {K, V} -> to_grepable(V, [K|KPath], Opts);
+%%                 _      -> pp_kv_str(KPath, Term, Opts)
 %%              end | case Terms of
 %%                        [] -> [];
 %%                        _  -> to_grepable(Terms, KPath, Opts)
@@ -149,7 +149,7 @@ non_leaf_to_grepable([], _KPath, _Opts) ->
     [];
 non_leaf_to_grepable([Term|Terms], KPath, Opts) ->
     [case Term of
-         {K, V} when is_atom(K)  ->
+         {K, V} ->
              to_grepable(V, [K|KPath], Opts);
          _ ->
              case is_leaf(Term) of

@@ -42,7 +42,7 @@ leaf_terms_test() ->
     "c=\"foo\"\n" = to_g([{c, "foo"}]),
     "d=[]\n"      = to_g([{d, []}]),
     ok.
-    
+
 kv_pairs_test() ->
     ("a.x=1\n"
      "a.y=2\n"
@@ -51,6 +51,9 @@ kv_pairs_test() ->
     ("b.z=3\n"
      "b.w.c=4\n"
      "b.w.d=5\n") = to_g([{b, [{z, 3}, {w, [{c, 4}, {d, 5}]}]}]),
+    ("a.1=x\n"
+     "a.2=y\n") = to_g([{a, [{1, x}, {2, y}]}]),
+    ("a.X=1\n") = to_g([{a, [{"X", 1}]}]),
     ok.
 
 list_of_non_kv_pairs_test() ->
